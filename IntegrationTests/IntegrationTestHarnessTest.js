@@ -9,11 +9,12 @@
 'use strict';
 
 var RCTTestModule = require('NativeModules').TestModule;
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 var {
   Text,
   View,
-} = React;
+} = ReactNative;
 
 var IntegrationTestHarnessTest = React.createClass({
   propTypes: {

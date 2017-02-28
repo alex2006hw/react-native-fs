@@ -10,25 +10,22 @@
  */
 'use strict';
 
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 
 var {
-  AppRegistry,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} = React;
+} = ReactNative;
 
 var TESTS = [
   require('./IntegrationTestHarnessTest'),
   require('./FSTest')
 ];
 
-TESTS.forEach(
-  (test) => AppRegistry.registerComponent(test.displayName, () => test)
-);
 
 var IntegrationTestsApp = React.createClass({
   getInitialState: function() {
@@ -87,4 +84,4 @@ var styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('IntegrationTestsApp', () => IntegrationTestsApp);
+export default IntegrationTestsApp;

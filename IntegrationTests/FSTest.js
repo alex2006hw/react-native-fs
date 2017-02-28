@@ -2,13 +2,14 @@
 'use strict';
 
 var RCTTestModule = require('NativeModules').TestModule;
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 var {
   Text,
   View,
-} = React;
+} = ReactNative;
 var RNFS = require('react-native-fs');
-var DEBUG = false;
+var DEBUG = true;
 
 
 // setup in componentDidMount
@@ -63,33 +64,38 @@ function testWriteAndReadFile() {
 
 
 function testCreateAndDeleteFile() {
-  var path = RNFS.DocumentDirectoryPath + '/test.txt';
-  var text = 'Lorem ipsum dolor sit amet';
-  var readText;
 
-  RNFS.writeFile(path, text)
+  const content = 'Lorem ipsum dolor sit amet';
+    // create a path you want to write to
+  var path = RNFS.DocumentDirectoryPath + '/test.txt';
+
+  // write the file
+  RNFS.writeFile(path, content, 'utf8')
     .then((success) => {
-      updateMessage('FILE CREATED!');
-      return RNFS.unlink(path);
-    })
-    .spread((success, path) => {
-      updateMessage('FILE DELETED!' + success + ',' + path);
-      return RNFS.stat(path);
-    })
-    .then((statResult) => {
-      updateMessage('*****' + statResult);
-      if (statResult.isFile()) {
-        updateMessage('FILE STILL EXISTS');
-      }
+      console.log(path+' --> WRITTEN!');
     })
     .catch((err) => {
-      updateMessage('catch' + err);
-      expectTrue(true,'File is deleted');      
+      console.log(err.message);
+    });
+
+  RNFS.readFile(path, 'utf8')
+    .then((result) => {
+     // log the file contents
+     if ( content === result ) console.log(content+' === '+result);
+       else console.log(content+' !== '+result);
     })
-    .finally(() => {
-      done(); //testrunners done
+    .catch((err) => {
+       console.log(err.message, err.code);
+    });
+
+  RNFS.unlink(path)
+    .then(() => {
+      console.log(path+' --> DELETED');
     })
-    .done(); //promise done needed to throw exception so that in case test fails,error is propagated
+    // `unlink` will throw an error, if the item to unlink does not exist
+    .catch((err) => {
+      console.log(err.message);
+    });
 }
 
 
